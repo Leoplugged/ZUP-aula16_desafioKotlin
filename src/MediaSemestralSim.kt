@@ -1,4 +1,6 @@
 package br.catalisa.com
+
+import java.util.*
 import kotlin.system.exitProcess
 
 //Programa para cálculo da Média Semestral do Aluno da SimCity
@@ -15,32 +17,57 @@ fun menu() {
     selecao(comando)
 }
 
+fun readln(): String {
+    val leitorCad = Scanner(System.`in`)
+    return leitorCad.next()
+}
+
 fun selecao(comando: Int?) {
-    when(comando) {
-        1 -> {notasAlune()
-            menu()}
-        2 -> {print("#  Saindo do programa. À Bientôt!  #")
-            exitProcess(0)}
-        else -> {println("\n-> Comando não válido! Tente de novo. <-\n")
-            menu()}
+    when (comando) {
+        1 -> {
+            notasAlune()
+            menu()
+        }
+        2 -> {
+            print("#  Saindo do programa. À Bientôt!  #")
+            exitProcess(0)
+        }
+        else -> {
+            println("\n-> Comando não válido! Tente de novo. <-\n")
+            menu()
+        }
     }
 }
 
 fun notasAlune() {
     println("\n\n#======== Notas de Alune Sim =======#\n#  Digite as notas conforme seguem  #")
     val notas = DoubleArray(size = 4)
-    for(cont in 1..4) {
-    //  try{ -> Tentativa
-        print("# ${cont}a nota: ")
-        notas[cont-1] = readln().toDouble()
-        while (notas[cont - 1] !in 0.0..10.0) {
-            print("# Nota não válida; digite entre 0.0 a 10.0.\n# ${cont}a nota: ")
-            notas[cont - 1] = readln().toDouble()
-    //  }catch(NumberFormatException NFE) { -> Tentativa
-        }
+    for (cont in 1..4) {
+        notas[cont - 1] = getNota(cont)
     }
     val mediaNotas = calcularMedia(notas)
     println("#A Média Semestral de Alune Sim é $mediaNotas.#")
+}
+
+fun getNota(position: Int): Double {
+    var nota: Double? = null
+    var flag = true
+    while (flag) {
+        print("# ${position}a nota: ")
+        nota = readln().toDoubleOrNull()
+        if (containsNota(nota)) {
+            flag = false
+        }
+    }
+    return nota!!
+}
+
+fun containsNota(nota: Double?): Boolean {
+    return if (nota == null) {
+        false
+    } else {
+        nota in 0.0..10.0
+    }
 }
 
 fun calcularMedia(notas: DoubleArray): Double {
